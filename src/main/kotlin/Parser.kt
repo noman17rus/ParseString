@@ -15,23 +15,22 @@ class Parser(val string: String) {
     private fun takeNumbers(string: String): List<String> {
         val phoneNumbersList = mutableListOf<String>()
         val numbers = string.filter { it.isDigit() }
-        var x = 0
-        for (i in 0..numbers.length - 1) {
-            val number = addPlus(numbers.substring(x, x + 11))
-            x += 11
+        var count = 0
+        for (i in numbers.indices) {
+            val number = addPlus(numbers.substring(count, count + 11))
+            count += 11
             phoneNumbersList.add(number)
-            if (x >= numbers.length) break
+            if (count >= numbers.length) break
         }
         return phoneNumbersList.toList()
     }
 
     private fun takeNames(string: String): List<String> {
-        val splitList = string.split('9').toMutableList()
         val names = mutableListOf<String>()
-        for (i in 0..splitList.size - 1) {
-            splitList[i] = splitList[i].filter { it.isLetter() }.toLowerCase().capitalize()
-            if (splitList[i] != "") {
-                names.add(splitList[i])
+        val splitList = string.split('9')
+        for (i in splitList.indices) {
+            if (splitList[i].filter { it.isLetter() } != "") {
+                names.add(splitList[i].filter { it.isLetter() }.toLowerCase().capitalize())
             }
         }
         return names.toList()
@@ -41,8 +40,8 @@ class Parser(val string: String) {
         val phoneNumbers = takeNumbers(string)
         val names = takeNames(string)
         val phonesAndNames = mutableMapOf<String, String>()
-        for (i in 0..names.size-1) {
-            phonesAndNames.put(names[i], phoneNumbers[i])
+        for (i in phoneNumbers.indices) {
+            phonesAndNames[names[i]] = phoneNumbers[i]
         }
         return phonesAndNames
     }
